@@ -1,0 +1,42 @@
+// ML Pipeline with AWS
+digraph {
+	subgraph cluster_data {
+		label="EDA & Feature Engineering"
+		A [label="Data Preprocessing
+(EDA, Encoding,
+Null Handling)"]
+		B [label="Clean Data"]
+		A -> B
+	}
+	subgraph cluster_model {
+		label="Model Training"
+		C1 [label=XGBoost]
+		C2 [label="Random Forest"]
+		C3 [label="Linear Regression"]
+		B -> C1
+		B -> C2
+		B -> C3
+	}
+	subgraph cluster_artifact {
+		label="Model Artifacts"
+		D [label=Artifacts]
+		C1 -> D
+		C2 -> D
+		C3 -> D
+	}
+	subgraph cluster_s3 {
+		label="Storage (AWS S3)"
+		E [label="S3 Bucket"]
+		B -> E
+	}
+	subgraph cluster_deploy {
+		label=Deployment
+		F [label="Deploy
+(AWS Lambda + API)"]
+		G [label=Endpoint]
+		D -> F
+		F -> G
+	}
+	E -> F [label="Trigger Lambda"]
+	F -> A [label="Feedback Loop" style=dashed]
+}
